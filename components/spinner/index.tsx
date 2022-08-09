@@ -47,7 +47,10 @@ const Spinner = () => {
   return (
     <div>
       <div className="relative aspect-square w-12 animate-pulseFull">
-        <Image src={`/images/types/${typeList[index]}.svg`} layout="fill" />
+        <Image
+          src={`/images/types/${typeList[index].toUpperCase()}.svg`}
+          layout="fill"
+        />
       </div>
     </div>
   )
