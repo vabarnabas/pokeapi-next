@@ -1,4 +1,4 @@
-export const fetchPokemon = async (type: string) => {
+export const fetchPokemonByType = async (type: string) => {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/type/${type}`
   )

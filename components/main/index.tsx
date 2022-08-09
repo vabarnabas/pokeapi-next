@@ -1,7 +1,6 @@
-import Image from "next/image"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
-import { fetchPokemon } from "../../services/fetchPokemon"
+import { fetchPokemonByType } from "../../services/fetchPokemon"
 import { PokemonResponse } from "../../types/pokemon.types"
 import Spinner from "../spinner"
 
@@ -12,7 +11,7 @@ const MainCanvas = () => {
 
   useEffect(() => {
     if (selectedType) {
-      fetchPokemon(
+      fetchPokemonByType(
         Array.isArray(selectedType) ? selectedType[0] : selectedType
       ).then((data) => setPokemonArray(data?.pokemon))
     }

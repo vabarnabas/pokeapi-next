@@ -12,7 +12,7 @@ const Layout: React.FC<Props> = ({ children }) => {
       <div className="mt-20 flex-1 h-full w-full items-center justify-center">
         {children}
       </div>
-      <div className="fixed bg-inherit">
+      <div className="fixed bg-inherit inset-x-0 top-0">
         <Header />
         <TypeSelector />
       </div>
