@@ -8,6 +8,7 @@ import { BaseType } from "../../types/type.types"
 const TypeSelector = () => {
   const router = useRouter()
   const [types, setTypes] = useState<BaseType[]>([])
+  const { type: selectedType } = router.query
 
   useEffect(() => {
     fetchTypes().then((data) => setTypes(data.results))
@@ -27,14 +28,17 @@ const TypeSelector = () => {
               e.preventDefault()
               onTypeSelected(type.name)
             }}
-            className="bg-slate-200 hover:bg-blue-100 px-2 py-0.5 rounded-md flex items-center justify-center cursor-pointer"
+            className={`bg-slate-200 px-2 py-0.5 rounded-md flex items-center justify-center cursor-pointer box-border ${
+              (Array.isArray(selectedType) ? selectedType[0] : selectedType) ===
+              type.name
+                ? "border border-blue-500 text-blue-500"
+                : "hover:bg-blue-100 text-slate-600"
+            }`}
           >
             <div className="relative h-4 w-4">
               <Image src={getTypeIcon(type.name)} layout="fill" />
             </div>
-            <p className="ml-1.5 capitalize text-sm text-slate-600">
-              {type.name}
-            </p>
+            <p className="ml-1.5 capitalize text-sm ">{type.name}</p>
           </div>
         ))}
       </div>
