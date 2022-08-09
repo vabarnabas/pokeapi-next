@@ -2,6 +2,7 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
 import { fetchTypes } from "../../services/fetchTypes"
+import { getTypeIcon } from "../../services/getTypeIcon"
 import { BaseType } from "../../types/type.types"
 
 const TypeSelector = () => {
@@ -29,10 +30,7 @@ const TypeSelector = () => {
             className="bg-slate-200 hover:bg-blue-100 px-2 py-0.5 rounded-md flex items-center justify-center cursor-pointer"
           >
             <div className="relative h-4 w-4">
-              <Image
-                src={`/images/types/${type.name.toUpperCase()}.svg`}
-                layout="fill"
-              />
+              <Image src={getTypeIcon(type.name)} layout="fill" />
             </div>
             <p className="ml-1.5 capitalize text-sm text-slate-600">
               {type.name}

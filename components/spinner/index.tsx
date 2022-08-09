@@ -1,5 +1,6 @@
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
+import { getTypeIcon } from "../../services/getTypeIcon"
 
 const Spinner = () => {
   const typeList = [
@@ -47,10 +48,7 @@ const Spinner = () => {
   return (
     <div>
       <div className="relative aspect-square w-12 animate-pulseFull">
-        <Image
-          src={`/images/types/${typeList[index].toUpperCase()}.svg`}
-          layout="fill"
-        />
+        <Image src={getTypeIcon(typeList[index])} layout="fill" />
       </div>
     </div>
   )

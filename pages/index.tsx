@@ -7,10 +7,6 @@ import MainCanvas from "../components/main"
 import { fetchTypes } from "../services/fetchTypes"
 
 const Home: NextPage = () => {
-  useEffect(() => {
-    fetchTypes().then((data) => console.log(data))
-  }, [])
-
   return (
     <Layout>
       <MainCanvas />
