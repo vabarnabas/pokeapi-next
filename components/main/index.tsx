@@ -31,7 +31,7 @@ const MainCanvas = () => {
           </div>
         </div>
       ) : (
-        <div className="w-full grid grid-cols-5 capitalize gap-x-4 gap-y-2">
+        <div className="w-full grid md:grid-cols-3 lg:grid-cols-5  capitalize gap-x-4 gap-y-2">
           {pokemonArray.length !== 0 &&
             pokemonArray.map((pokemon) => (
               <div
