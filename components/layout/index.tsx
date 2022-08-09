@@ -8,10 +8,14 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ children }) => {
   return (
-    <div className="bg-slate-50 text-slate-500 h-screen w-screen flex flex-col select-none overflow-hidden">
-      <Header />
-      <TypeSelector />
-      <div className="flex flex-1 items-center justify-center ">{children}</div>
+    <div className="bg-slate-50 text-slate-500 flex h-screen w-screen flex-col select-none overflow-hidden">
+      <div className="mt-20 flex-1 h-full w-full items-center justify-center">
+        {children}
+      </div>
+      <div className="fixed bg-inherit">
+        <Header />
+        <TypeSelector />
+      </div>
     </div>
   )
 }

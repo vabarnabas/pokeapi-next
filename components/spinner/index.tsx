@@ -22,7 +22,7 @@ const Spinner = () => {
     "steel",
     "water",
   ]
-  const [index, setIndex] = useState<number>(0)
+  const [index, setIndex] = useState<number>(Math.floor(Math.random() * 16))
   let intervalIndex = index
   let canChange = true
 
@@ -46,7 +46,7 @@ const Spinner = () => {
 
   return (
     <div>
-      <div className="relative aspect-square w-14 animate-pulseFull">
+      <div className="relative aspect-square w-12 animate-pulseFull">
         <Image src={`/images/types/${typeList[index]}.svg`} layout="fill" />
       </div>
     </div>
