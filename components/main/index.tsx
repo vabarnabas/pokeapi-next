@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from "react"
+import { usePokemonStorage } from "../../providers/pokemon.storage.provider"
 import { fetchPokemon, fetchPokemonByType } from "../../services/fetchPokemon"
 import { getTypeIcon } from "../../services/getTypeIcon"
 import { Pokemon, PokemonResponse } from "../../types/pokemon.types"
@@ -9,6 +10,7 @@ import Spinner from "../spinner"
 
 const MainCanvas = () => {
   const router = useRouter()
+  const { pokemonStorage } = usePokemonStorage()
   const { type: selectedType, pokemon: selectedPokemon } = router.query
   const [pokemonArray, setPokemonArray] = useState<PokemonResponse[]>([])
   const [extendedPokemonArray, setExtendedPokemonArray] = useState<Pokemon[]>(
@@ -24,7 +26,7 @@ const MainCanvas = () => {
 
       // fetchPokemon("ditto").then((data) => console.log(data))
     }
-  }, [router.query])
+  }, [selectedType])
 
   useEffect(() => {
     if (pokemonArray.length !== 0) {
@@ -64,7 +66,11 @@ const MainCanvas = () => {
                   })
                 }
                 key={pokemon.name}
-                className="bg-slate-200 hover:bg-blue-100 px-2 py-1 rounded-md flex items-center justify-start cursor-pointer"
+                className={`bg-slate-200 hover:bg-blue-100 px-2 py-1 rounded-md flex items-center justify-start cursor-pointer ${
+                  pokemonStorage.includes(pokemon.name)
+                    ? "border border-blue-500 box-border"
+                    : ""
+                }`}
               >
                 <div className="flex mr-2">
                   {pokemon.sprites.front_default ? (

@@ -6,17 +6,22 @@ import { fetchPokemon } from "../../services/fetchPokemon"
 import Spinner from "../spinner"
 import Image from "next/image"
 import { getTypeIcon } from "../../services/getTypeIcon"
+import { usePokemonStorage } from "../../providers/pokemon.storage.provider"
+import { TbPokeball } from "react-icons/tb"
 
 const ProfileCard = () => {
+  const { pokemonStorage, addPokemon, removePokemon } = usePokemonStorage()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(true)
   const [pokemonData, setPokemonData] = useState({} as Pokemon)
+  const [pokemonSprites, setPokemonSprites] = useState<string[]>([])
   const [imageLength, setImageLength] = useState(0)
   const [loadedLength, setLoadedLength] = useState(0)
+  const [removeFetching, setRemoveFetching] = useState(false)
+
+  console.log(pokemonStorage)
 
   const { pokemon: selectedPokemon } = router.query
-
-  console.log({ imageLength, loadedLength })
 
   useEffect(() => {
     if (selectedPokemon) {
@@ -37,8 +42,24 @@ const ProfileCard = () => {
           pokemonData.sprites.front_shiny,
         ].filter((sprite) => sprite !== null).length
       )
+      setPokemonSprites(
+        [
+          pokemonData.sprites.back_default,
+          pokemonData.sprites.back_shiny,
+          pokemonData.sprites.front_default,
+          pokemonData.sprites.front_shiny,
+        ].filter((sprite) => sprite !== null)
+      )
     }
   }, [pokemonData])
+
+  useEffect(() => {
+    const timeOut = window.setTimeout(() => {
+      setRemoveFetching(true)
+    }, 3000)
+
+    return () => clearTimeout(timeOut)
+  }, [])
 
   const onClose = () => {
     setIsOpen(false)
@@ -83,7 +104,13 @@ const ProfileCard = () => {
                   <Spinner />
                 </div>
               ) : (
-                <Dialog.Panel className="transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel
+                  className={`transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all ${
+                    pokemonStorage.includes(pokemonData.name)
+                      ? "border-2 border-blue-500"
+                      : ""
+                  }`}
+                >
                   <Dialog.Title
                     as="h3"
                     className="text-xl flex capitalize font-medium items-center"
@@ -98,7 +125,7 @@ const ProfileCard = () => {
                         </div>
                       ))}
                     </div>
-                    {pokemonData.name}
+                    <p className="">{pokemonData.name}</p>
                   </Dialog.Title>
                   <div className="-space-y-0.5 font-light text-slate-400">
                     <p className="text-xs">{`Weight: ${
@@ -110,55 +137,19 @@ const ProfileCard = () => {
                   </div>
                   <div className="mt-4 flex items-center justify-center">
                     <div className="relative grid grid-cols-2 items-center justify-between">
-                      {pokemonData.sprites.front_default && (
-                        <div className="relative h-32 w-32">
+                      {pokemonSprites.map((sprite) => (
+                        <div key={sprite} className="relative h-32 w-32">
                           <Image
+                            loading="eager"
                             onLoad={() => {
-                              console.log(1)
                               setLoadedLength(loadedLength + 1)
                             }}
-                            src={pokemonData.sprites.front_default}
+                            src={sprite}
                             layout="fill"
                           />
                         </div>
-                      )}
-                      {pokemonData.sprites.back_default && (
-                        <div className="relative h-32 w-32">
-                          <Image
-                            onLoad={() => {
-                              console.log(2)
-                              setLoadedLength(loadedLength + 1)
-                            }}
-                            src={pokemonData.sprites.back_default}
-                            layout="fill"
-                          />
-                        </div>
-                      )}
-                      {pokemonData.sprites.front_shiny && (
-                        <div className="relative h-32 w-32">
-                          <Image
-                            onLoad={() => {
-                              console.log(3)
-                              setLoadedLength(loadedLength + 1)
-                            }}
-                            src={pokemonData.sprites.front_shiny}
-                            layout="fill"
-                          />
-                        </div>
-                      )}
-                      {pokemonData.sprites.back_shiny && (
-                        <div className="relative h-32 w-32">
-                          <Image
-                            onLoad={() => {
-                              console.log(4)
-                              setLoadedLength(loadedLength + 1)
-                            }}
-                            src={pokemonData.sprites.back_shiny}
-                            layout="fill"
-                          />
-                        </div>
-                      )}
-                      {imageLength !== loadedLength && (
+                      ))}
+                      {imageLength !== loadedLength && !removeFetching && (
                         <div className="absolute w-64 h-64 flex items-center justify-center bg-white">
                           <Spinner />
                         </div>
@@ -167,14 +158,24 @@ const ProfileCard = () => {
                   </div>
 
                   <div className="mt-4">
-                    <button
-                      onClick={() => {
-                        console.log({ imageLength, loadedLength })
-                      }}
-                      className="w-full border-blue-500 border hover:bg-slate-200 hover:border-blue-600 hover:text-blue-600 text-blue-500 rounded-md py-1 text-sm px-3"
-                    >
-                      Catch
-                    </button>
+                    {(imageLength === loadedLength || removeFetching) && (
+                      <button
+                        onClick={() => {
+                          pokemonStorage.includes(pokemonData.name)
+                            ? removePokemon(pokemonData.name)
+                            : addPokemon(pokemonData.name)
+                        }}
+                        className={`w-full  rounded-md py-1 text-sm px-3 ${
+                          pokemonStorage.includes(pokemonData.name)
+                            ? "border-rose-500 border hover:bg-slate-200 hover:border-rose-600 hover:text-rose-600 text-rose-500"
+                            : "border-blue-500 border hover:bg-slate-200 hover:border-blue-600 hover:text-blue-600 text-blue-500"
+                        }`}
+                      >
+                        {pokemonStorage.includes(pokemonData.name)
+                          ? "Release"
+                          : "Catch"}
+                      </button>
+                    )}
                   </div>
                 </Dialog.Panel>
               )}
