@@ -63,10 +63,11 @@ const ProfileCard = () => {
 
   const onClose = () => {
     setIsOpen(false)
+    const { pokemon, ...queries } = router.query
     router.push(
       {
         pathname: router.pathname,
-        query: { type: router.query.type },
+        query: { ...queries },
       },
       undefined,
       { shallow: true }
@@ -88,7 +89,7 @@ const ProfileCard = () => {
           <div className="fixed inset-0 bg-slate-900 bg-opacity-50" />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto select-none">
+        <div className="fixed inset-0 select-none overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
             <Transition.Child
               as={Fragment}
@@ -105,7 +106,7 @@ const ProfileCard = () => {
                 </div>
               ) : (
                 <Dialog.Panel
-                  className={`transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all ${
+                  className={`transform overflow-hidden rounded-2xl bg-white px-6 py-6 text-left align-middle shadow-xl transition-all ${
                     pokemonStorage.includes(pokemonData.name)
                       ? "border-2 border-blue-500"
                       : ""
@@ -113,9 +114,9 @@ const ProfileCard = () => {
                 >
                   <Dialog.Title
                     as="h3"
-                    className="text-xl flex capitalize font-medium items-center"
+                    className="flex items-center text-xl font-medium capitalize"
                   >
-                    <div className="flex mr-2 space-x-1">
+                    <div className="mr-2 flex space-x-1">
                       {pokemonData.types.map((type) => (
                         <div key={type.type.name} className="relative h-4 w-4">
                           <Image
@@ -150,31 +151,47 @@ const ProfileCard = () => {
                         </div>
                       ))}
                       {imageLength !== loadedLength && !removeFetching && (
-                        <div className="absolute w-64 h-64 flex items-center justify-center bg-white">
+                        <div className="absolute flex h-full w-full items-center justify-center bg-white">
                           <Spinner />
                         </div>
                       )}
                     </div>
                   </div>
-
-                  <div className="mt-4">
+                  <div className="">
                     {(imageLength === loadedLength || removeFetching) && (
-                      <button
-                        onClick={() => {
-                          pokemonStorage.includes(pokemonData.name)
-                            ? removePokemon(pokemonData.name)
-                            : addPokemon(pokemonData.name)
-                        }}
-                        className={`w-full  rounded-md py-1 text-sm px-3 ${
-                          pokemonStorage.includes(pokemonData.name)
-                            ? "border-rose-500 border hover:bg-slate-200 hover:border-rose-600 hover:text-rose-600 text-rose-500"
-                            : "border-blue-500 border hover:bg-slate-200 hover:border-blue-600 hover:text-blue-600 text-blue-500"
-                        }`}
-                      >
-                        {pokemonStorage.includes(pokemonData.name)
-                          ? "Release"
-                          : "Catch"}
-                      </button>
+                      <div className="">
+                        <p className="mb-1 text-xs font-light text-slate-400">
+                          Abilities:
+                        </p>
+                        <div className="flex justify-between gap-x-2">
+                          {pokemonData.abilities
+                            .filter((ability) => ability.isHidden !== true)
+                            .map((ability) => (
+                              <div
+                                key={ability.ability.name}
+                                className="flex w-full items-center justify-center rounded-md border px-3 py-1 text-center text-xs capitalize text-slate-400"
+                              >
+                                {ability.ability.name}
+                              </div>
+                            ))}
+                        </div>
+                        <button
+                          onClick={() => {
+                            pokemonStorage.includes(pokemonData.name)
+                              ? removePokemon(pokemonData.name)
+                              : addPokemon(pokemonData.name)
+                          }}
+                          className={`mt-4 w-full rounded-md py-1 px-3 text-sm ${
+                            pokemonStorage.includes(pokemonData.name)
+                              ? "border border-rose-500 text-rose-500 hover:border-rose-600 hover:bg-slate-200 hover:text-rose-600"
+                              : "border border-blue-500 text-blue-500 hover:border-blue-600 hover:bg-slate-200 hover:text-blue-600"
+                          }`}
+                        >
+                          {pokemonStorage.includes(pokemonData.name)
+                            ? "Release"
+                            : "Catch"}
+                        </button>
+                      </div>
                     )}
                   </div>
                 </Dialog.Panel>
