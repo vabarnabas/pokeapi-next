@@ -26,6 +26,13 @@ const SearchBar = () => {
     <div className="flex h-full items-center justify-end bg-slate-50 pl-4">
       {isSearching ? (
         <div className="flex items-center">
+          {/* <input type="checkbox" id="caught-only" className="" />
+          <label
+            htmlFor="caught-only"
+            className="flex w-full break-normal text-xs text-slate-600"
+          >
+            Caught
+          </label> */}
           <input
             type="text"
             value={searchQuery}
@@ -35,17 +42,24 @@ const SearchBar = () => {
             className="bg-transparent pr-2 text-sm outline-none"
             placeholder="Search..."
           />
-          <HiX
-            onClick={() => setIsSearching(false)}
-            className="cursor-pointer text-lg hover:text-rose-400"
-          />
         </div>
       ) : (
         <HiSearch
-          onClick={() => setIsSearching(true)}
+          onClick={() => {
+            setIsSearching(true)
+          }}
           className="cursor-pointer text-lg hover:text-slate-400"
         />
       )}
+      <HiX
+        onClick={() => {
+          const { search, ...queries } = router.query
+          setIsSearching(false)
+          setSearchQuery("")
+          router.push({ pathname: router.pathname, query: { ...queries } })
+        }}
+        className="ml-2 cursor-pointer text-lg hover:text-rose-400"
+      />
     </div>
   )
 }
